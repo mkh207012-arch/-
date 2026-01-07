@@ -43,9 +43,9 @@ export const saveApiKey = (key: string) => {
 export const validateConnection = async (key: string): Promise<boolean> => {
   try {
     const ai = new GoogleGenAI({ apiKey: key });
-    // Use a lightweight model for validation
+    // Use a standard lightweight text model for validation (Fixed from non-existent 2.5 version)
     await ai.models.generateContent({
-      model: "gemini-2.5-flash-latest",
+      model: "gemini-3-flash-preview",
       contents: "ping",
     });
     return true;
