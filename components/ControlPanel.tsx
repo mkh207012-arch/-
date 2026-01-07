@@ -3,7 +3,7 @@ import { GenerationSettings, ReferenceImage, StudioMode, GridCount } from '../ty
 import { ASPECT_RATIOS, CONCEPT_GROUPS, RESOLUTIONS, GRID_OPTIONS, GRID_SIZING_OPTIONS, FASHION_POSES, CAMERA_ANGLES } from '../constants';
 import { LensSelector } from './LensSelector';
 import { Button } from './Button';
-import { Sparkles, Ratio, Zap, Monitor, MapPin, Camera, User, Shirt, Plus, X, LayoutTemplate, Grid, Layers, ScanEye, MessageSquarePlus, Scissors, Settings } from 'lucide-react';
+import { Sparkles, Ratio, Zap, Monitor, MapPin, Camera, User, Shirt, Plus, X, LayoutTemplate, Grid, Layers, ScanEye, MessageSquarePlus, Scissors, Settings, RotateCcw } from 'lucide-react';
 
 interface ControlPanelProps {
   settings: GenerationSettings;
@@ -86,6 +86,18 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
       customPoses: newCustomPoses,
       cameraAngles: newAngles,
       customCameraAngles: newCustomAngles
+    });
+  };
+
+  const handleResetPosesAngles = () => {
+    const count = settings.gridCount;
+    onUpdate({
+      ...settings,
+      poses: Array(count).fill(FASHION_POSES[0]), // Reset to Random
+      customPoses: Array(count).fill(""),         // Clear inputs
+      cameraAngles: Array(count).fill(CAMERA_ANGLES[0]), // Reset to Random
+      customCameraAngles: Array(count).fill(""),  // Clear inputs
+      additionalPrompt: "" // Clear override prompt
     });
   };
 
@@ -418,9 +430,19 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
 
         {/* Dynamic Pose & Angle Selection Per Cut */}
         <div className="space-y-3">
-          <div className="flex items-center gap-2 text-gray-300 font-semibold">
-            <Zap size={18} />
-            <h3>포즈 및 앵글 설정 ({settings.gridCount}컷)</h3>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 text-gray-300 font-semibold">
+              <Zap size={18} />
+              <h3>포즈 및 앵글 설정 ({settings.gridCount}컷)</h3>
+            </div>
+            <button 
+              onClick={handleResetPosesAngles}
+              className="text-xs flex items-center gap-1 text-gray-500 hover:text-white transition-colors px-2 py-1 rounded bg-gray-800 hover:bg-gray-700"
+              title="모든 포즈/앵글 설정 초기화"
+            >
+              <RotateCcw size={12} />
+              초기화
+            </button>
           </div>
 
           <div className="space-y-4">
