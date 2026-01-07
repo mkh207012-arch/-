@@ -9,7 +9,7 @@ const LOCAL_STORAGE_KEY = "k_beauty_studio_api_key_v1";
 
 /**
  * Retrieves the API key from Local Storage (decrypted).
- * Safe for browser environments where process.env is undefined.
+ * Safe for browser environments.
  */
 export const getApiKey = (): string | null => {
   try {
@@ -21,16 +21,8 @@ export const getApiKey = (): string | null => {
     console.error("Failed to retrieve API key", e);
   }
   
-  // Safe check for development environment variables if needed, 
-  // but prioritize returning null to force UI prompt in production.
-  try {
-    if (typeof process !== 'undefined' && process.env && process.env.API_KEY) {
-      return process.env.API_KEY;
-    }
-  } catch (e) {
-    // Ignore reference errors
-  }
-
+  // Note: We removed process.env check entirely to prevent runtime crashes in browser environments.
+  // Users must enter their key via the UI.
   return null;
 };
 
