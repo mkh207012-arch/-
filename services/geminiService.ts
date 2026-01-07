@@ -8,7 +8,8 @@ const LOCAL_STORAGE_KEY = "k_beauty_studio_api_key_v1";
 // --- API Key Management ---
 
 /**
- * Retrieves the API key from Local Storage (decrypted) or falls back to env var.
+ * Retrieves the API key from Local Storage (decrypted).
+ * Safe for browser environments where process.env is undefined.
  */
 export const getApiKey = (): string | null => {
   try {
@@ -19,8 +20,18 @@ export const getApiKey = (): string | null => {
   } catch (e) {
     console.error("Failed to retrieve API key", e);
   }
-  // Fallback to env variable if available (e.g., during local dev)
-  return process.env.API_KEY || null;
+  
+  // Safe check for development environment variables if needed, 
+  // but prioritize returning null to force UI prompt in production.
+  try {
+    if (typeof process !== 'undefined' && process.env && process.env.API_KEY) {
+      return process.env.API_KEY;
+    }
+  } catch (e) {
+    // Ignore reference errors
+  }
+
+  return null;
 };
 
 /**
